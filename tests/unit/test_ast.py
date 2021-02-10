@@ -295,7 +295,7 @@ class TestAST(object):
         res, ctx = a.analyze(MockPred(), d)
         assert not res
         assert "not in left side" in ctx.failed[0]
-        assert ctx.literals["l"] == []
+        assert ctx.literals["l"] == set()
         assert ctx.literals["r"] == 5
 
     def test_contains_valid(self):
@@ -305,7 +305,7 @@ class TestAST(object):
         d = {"l": [42], "r": 42}
         res, ctx = a.analyze(MockPred(), d)
         assert res
-        assert ctx.literals["l"] == [42]
+        assert ctx.literals["l"] == {42}
         assert ctx.literals["r"] == 42
 
     def test_match_bad_types(self):

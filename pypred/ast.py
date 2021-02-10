@@ -32,7 +32,11 @@ class EvalContext(object):
         self.analyze = self._analyze
 
     def resolve_identifier(self, ident):
-        return self.pred.resolve_identifier(self.doc, ident)
+        res = self.pred.resolve_identifier(self.doc, ident)
+        # We always evaluate collections as set
+        if isinstance(res, list):
+            res = set(res)
+        return res
 
 
 def dup(ast):
