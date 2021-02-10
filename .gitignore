@@ -5,6 +5,7 @@ build
 .coverage
 .pyenv
 .tox
+.python-version
 
 # Ignore the parser outputs
 parsetab.py
