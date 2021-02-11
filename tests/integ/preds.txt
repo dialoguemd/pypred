@@ -25,8 +25,8 @@ thingy is 200 and val is 100 # false
 {"Jack" "Joe" "Jill"} contains name # true
 {400 500} contains status # true
 {"east-db-001" "east-foo-002"} contains server # false
-errors is {"disk full" "cpu load"} #true
-errors == {"disk full" "cpu load"} #true
-{"disk full" "cpu load"} is errors #true
-errors is {"disk full" "cpu load" "other error" } #false
-errors is not {"disk full" "cpu load" "other error" } #true
+errors is {"disk full" "cpu load"} # true
+errors == {"disk full" "cpu load"} # true
+{"disk full" "cpu load"} is errors # true
+errors is {"disk full" "cpu load" "other error"} # false
+errors is not {"disk full" "cpu load" "other error"} # true
