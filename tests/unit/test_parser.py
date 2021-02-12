@@ -61,7 +61,7 @@ class TestParser(object):
         "Literal v:server",
         "Regex v:east-web-([\d]+)",
      "LogicalOperator t:and l:ContainsOperator r:CompareOperator",
-        "ContainsOperator l:Literal r:Literal",
+        "ContainsOperator t:contains l:Literal r:Literal",
             "Literal v:errors",
             "Literal v:\"CPU load\"",
         "CompareOperator t:!= l:Literal r:Literal",

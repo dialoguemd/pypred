@@ -226,7 +226,7 @@ class TestOptimizer(object):
         "Tests removing an Empty contains X"
         e = ast.Empty()
         v = ast.Literal('foo')
-        cn = ast.ContainsOperator(e, v)
+        cn = ast.ContainsOperator("contains", e, v)
         c, r = optimizer.optimization_pass(cn)
         assert c == 1
         assert isinstance(r, ast.Constant)
@@ -236,7 +236,7 @@ class TestOptimizer(object):
         "Tests removing an Empty contains X"
         u = ast.Undefined()
         v = ast.Literal('foo')
-        cn = ast.ContainsOperator(u, v)
+        cn = ast.ContainsOperator("contains", u, v)
         c, r = optimizer.optimization_pass(cn)
         assert c == 1
         assert isinstance(r, ast.Constant)

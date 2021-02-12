@@ -93,13 +93,13 @@ class TestAST(object):
         assert "must take a regex" in info["errors"][0]
 
     def test_contains_bad(self):
-        a = ast.ContainsOperator(ast.Literal("foo"), ast.Empty())
+        a = ast.ContainsOperator("contains", ast.Literal("foo"), ast.Empty())
         valid, info = a.validate()
         assert not valid
         assert "Contains operator must take" in info["errors"][0]
 
     def test_contains_valid_args(self):
-        a = ast.ContainsOperator(ast.Literal("foo"), ast.Literal("bar"))
+        a = ast.ContainsOperator("contains", ast.Literal("foo"), ast.Literal("bar"))
         valid, info = a.validate()
         assert valid
 
@@ -268,7 +268,7 @@ class TestAST(object):
     def test_contains_invalid(self):
         l = ast.Literal("l")
         r = ast.Literal("r")
-        a = ast.ContainsOperator(l, r)
+        a = ast.ContainsOperator("contains", l, r)
         d = {"l": 1, "r": None}
         res, ctx = a.analyze(MockPred(), d)
         assert not res
@@ -279,7 +279,7 @@ class TestAST(object):
     def test_contains_undef(self):
         l = ast.Literal("l")
         r = ast.Literal("r")
-        a = ast.ContainsOperator(l, r)
+        a = ast.ContainsOperator("contains", l, r)
         d = {"r": 5}
         res, ctx = a.analyze(MockPred(), d)
         assert not res
@@ -290,7 +290,7 @@ class TestAST(object):
     def test_contains_empty(self):
         l = ast.Literal("l")
         r = ast.Literal("r")
-        a = ast.ContainsOperator(l, r)
+        a = ast.ContainsOperator("contains", l, r)
         d = {"l": [], "r": 5}
         res, ctx = a.analyze(MockPred(), d)
         assert not res
@@ -301,7 +301,7 @@ class TestAST(object):
     def test_contains_valid(self):
         l = ast.Literal("l")
         r = ast.Literal("r")
-        a = ast.ContainsOperator(l, r)
+        a = ast.ContainsOperator("contains", l, r)
         d = {"l": [42], "r": 42}
         res, ctx = a.analyze(MockPred(), d)
         assert res

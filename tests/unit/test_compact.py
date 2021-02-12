@@ -47,9 +47,9 @@ class TestCompact(object):
         n9_name = compact.node_name(n9)
         assert ("MatchOperator", ("Literal", "foo"), ("Regex", "^tubez$")) == n9_name
 
-        n10 = ast.ContainsOperator(n1, n2)
+        n10 = ast.ContainsOperator("contains", n1, n2)
         n10_name = compact.node_name(n10)
-        assert ("ContainsOperator", ("Literal", "foo"), ("Number", 12.0)) == n10_name
+        assert ("ContainsOperator", "contains", ("Literal", "foo"), ("Number", 12.0)) == n10_name
 
         n11 = ast.LogicalOperator('and', n1, n3)
         n11_name = compact.node_name(n11)
