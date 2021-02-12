@@ -274,7 +274,7 @@ class TestAST(object):
         assert not res
         assert "does not support contains" in ctx.failed[0]
         assert ctx.literals["l"] == 1
-        assert "r" not in ctx.literals
+        assert ctx.literals["r"] == None
 
     def test_contains_undef(self):
         l = ast.Literal("l")

@@ -243,7 +243,7 @@ def select_rewrite_expression(settings, name, exprs):
 
     # Check if this is a contains operator. The contains operator
     # uses static rewriting if we are operating on LiteralSets
-    elif name[0] == "ContainsOperator" and name[1] == 'LiteralSet':
+    elif name[0] == "ContainsOperator" and name[1] == "contains" and name[2] == 'LiteralSet':
         return contains.select_rewrite_expression(settings, name, exprs)
 
     # For negate operators, use the sub-expression
@@ -269,7 +269,7 @@ def rewrite_ast(node, name, expr, assumed_result):
     if name[0] == "CompareOperator":
         return compare.compare_rewrite(node, name, expr, assumed_result)
 
-    elif name[0] == "ContainsOperator" and name[1] == 'LiteralSet':
+    elif name[0] == "ContainsOperator" and name[1] == "contains" and name[2] == 'LiteralSet':
         return contains.contains_rewrite(node, name, expr, assumed_result)
 
     else:
