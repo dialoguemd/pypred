@@ -13,6 +13,8 @@ term : factor GREATER_THAN factor
        | factor IS_EQUALS NOT factor
        | factor IS_EQUALS factor
        | factor CONTAINS factor
+       | factor CONTAINS ANY factor
+       | factor CONTAINS ALL factor
        | factor MATCHES factor
        | factor
 

@@ -14,6 +14,8 @@ reserved = {
     'not': 'NOT',
     'contains': 'CONTAINS',
     'matches': 'MATCHES',
+    'anyof': 'ANY',
+    'allof': 'ALL',
     'true': 'TRUE',
     'false': 'FALSE',
     'undefined': 'UNDEFINED',
@@ -39,6 +41,8 @@ tokens = (
     'LBRACK',
     'RBRACK',
     'CONTAINS',
+    'CONTAINS_ANY',
+    'CONTAINS_ALL',
     'MATCHES',
     'NUMBER',
     'STRING',
@@ -168,7 +172,17 @@ def p_term_dbl_equals(p):
 
 def p_contains(p):
     "term : factor CONTAINS factor"
-    p[0] = ast.ContainsOperator(p[1], p[3])
+    p[0] = ast.ContainsOperator("contains", p[1], p[3])
+    p[0].set_position(p.lineno(2), compute_column(p.lexer, p.lexpos(2)))
+
+def p_contains_any(p):
+    "term : factor CONTAINS ANY factor"
+    p[0] = ast.ContainsOperator("any", p[1], p[4])
+    p[0].set_position(p.lineno(2), compute_column(p.lexer, p.lexpos(2)))
+
+def p_contains_all(p):
+    "term : factor CONTAINS ALL factor"
+    p[0] = ast.ContainsOperator("all", p[1], p[4])
     p[0].set_position(p.lineno(2), compute_column(p.lexer, p.lexpos(2)))
 
 def p_matchse(p):

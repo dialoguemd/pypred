@@ -359,7 +359,10 @@ def node_name(node, enable_static=False):
         else:
             return node_name(node.right)
 
-    elif cls_name in ("MatchOperator", "ContainsOperator"):
+    elif cls_name == "ContainsOperator":
+        return (cls_name, node.type, node_name(node.left), node_name(node.right))
+
+    elif cls_name == "MatchOperator":
         return (cls_name, node_name(node.left), node_name(node.right))
     else:
         raise Exception("Unhandled class %s" % cls_name)
