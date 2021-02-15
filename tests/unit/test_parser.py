@@ -61,7 +61,7 @@ class TestParser(object):
         "Literal v:server",
         "Regex v:east-web-([\d]+)",
      "LogicalOperator t:and l:ContainsOperator r:CompareOperator",
-        "ContainsOperator l:Literal r:Literal",
+        "ContainsOperator t:contains l:Literal r:Literal",
             "Literal v:errors",
             "Literal v:\"CPU load\"",
         "CompareOperator t:!= l:Literal r:Literal",
@@ -124,6 +124,32 @@ class TestParser(object):
     "Literal v:bad",
     "Constant v:None"
 ])
+
+    def test_contains_anyof_parse(self):
+        # Only using one value in the set since set order isn't guaranteed 
+        # and it makes the test flaky
+        inp = 'errors contains anyof {"foo"}'
+        self.assert_nodes(
+            inp,
+            [
+                "ContainsOperator t:any l:Literal r:LiteralSet",
+                "Literal v:errors",
+                'LiteralSet v:frozenset({Literal v:"foo"})',
+            ],
+        )
+
+    def test_contains_allof_parse(self):
+        # Only using one value in the set since set order isn't guaranteed 
+        # and it makes the test flaky
+        inp = 'errors contains allof {"foo"}'
+        self.assert_nodes(
+            inp,
+            [
+                "ContainsOperator t:all l:Literal r:LiteralSet",
+                "Literal v:errors",
+                'LiteralSet v:frozenset({Literal v:"foo"})',
+            ],
+        )
 
     def test_literal_set(self):
         inp = "{true false 1.0 \"quote\"}"

@@ -1,3 +1,4 @@
+import pytest
 from pypred import optimizer, ast
 
 class TestOptimizer(object):
@@ -222,21 +223,23 @@ class TestOptimizer(object):
         assert c == 1
         assert isinstance(r, ast.Empty)
 
-    def test_empty_contains(self):
+    @pytest.mark.parametrize("type", ["contains", "any", "all"])
+    def test_empty_contains(self, type):
         "Tests removing an Empty contains X"
         e = ast.Empty()
         v = ast.Literal('foo')
-        cn = ast.ContainsOperator(e, v)
+        cn = ast.ContainsOperator(type, e, v)
         c, r = optimizer.optimization_pass(cn)
         assert c == 1
         assert isinstance(r, ast.Constant)
         assert r.value == False
 
-    def test_undef_contains(self):
+    @pytest.mark.parametrize("type", ["contains", "any", "all"])
+    def test_undef_contains(self, type):
         "Tests removing an Empty contains X"
         u = ast.Undefined()
         v = ast.Literal('foo')
-        cn = ast.ContainsOperator(u, v)
+        cn = ast.ContainsOperator(type, u, v)
         c, r = optimizer.optimization_pass(cn)
         assert c == 1
         assert isinstance(r, ast.Constant)

@@ -307,38 +307,96 @@ class CompareOperator(Node):
 
 
 class ContainsOperator(Node):
-    "Used for the 'contains' operator"
-    def __init__(self, left, right):
+    "Used for the 'contains' operator and derived list comparisons"
+
+    def __init__(self, op, left, right):
+        self.type = op
         self.left = left
         self.right = right
 
+    def name(self):
+        return "%s operator at %s" % (self.type.upper(), self.position)
+
     def _validate(self, info):
-        if not isinstance(self.right, (Number, Literal, Constant)):
+        if self.type not in ("contains", "any", "all"):
             errs = info["errors"]
-            errs.append("Contains operator must take a literal or constant! Got: %s for %s" % (repr(self.right), self.name()))
+            errs.append("Unknown compare operator %s" % self.type)
             return False
+
+        if self.type == "contains" and not isinstance(
+            self.right, (Number, Literal, Constant)
+        ):
+            errs = info["errors"]
+            errs.append(
+                "Contains operator must take a literal or constant! Got: %s for %s"
+                % (repr(self.right), self.name())
+            )
+            return False
+
+        if self.type in ("any", "all") and not isinstance(self.right, LiteralSet):
+            errs = info["errors"]
+            errs.append(
+                "Contains %s operator must take a set! Got: %s for %s"
+                % (self.type, repr(self.right), self.name())
+            )
+            return False
+
         return True
 
     @failure_info
     def eval(self, ctx):
         left = self.left.eval(ctx)
-        if hasattr(left, "__contains__"):
-            right = self.right.eval(ctx)
+        if not hasattr(left, "__contains__"):
+            return False
+
+        right = self.right.eval(ctx)
+        if self.type == "contains":
             return right in left
+
+        if not hasattr(right, "__iter__"):
+            return False
+        if self.type == "any":
+            return any(right_item in left for right_item in right)
+        if self.type == "all":
+            return all(right_item in left for right_item in right)
         return False
 
     def failure_info(self, ctx):
         with ctx:
             left = self.left.eval(ctx)
-        if not hasattr(left, "__contains__"):
-            err = "Left side: %s does not support contains for %s" \
-                % (repr(left), self.name())
-        else:
-            with ctx:
-                right = self.right.eval(ctx)
-            err = "Right side: %s not in left side: %s for %s" \
-                    % (repr(right), repr(left), self.name())
+            right = self.right.eval(ctx)
 
+        if not hasattr(left, "__contains__"):
+            err = "Left side: %s does not support contains for %s" % (
+                repr(left),
+                self.name(),
+            )
+        elif self.type == "contains":
+            err = "Right side: %s not in left side: %s for %s" % (
+                repr(right),
+                repr(left),
+                self.name(),
+            )
+        elif not hasattr(right, "__iter__"):
+            err = "Right side: %s is not iterable for %s" % (repr(left), self.name())
+        elif self.type == "any":
+            err = "Right side: none of %s items in left side: %s for %s" % (
+                repr(right),
+                repr(left),
+                self.name(),
+            )
+        elif self.type == "all":
+            err = "Right side: %s not in left side: %s for %s" % (
+                repr(right),
+                repr(left),
+                self.name(),
+            )
+        else:
+            err = "%s failed, left: %s,right: %s" % (
+                self.name(),
+                repr(left),
+                repr(right),
+            )
         ctx.failed.append(err)
 
 
