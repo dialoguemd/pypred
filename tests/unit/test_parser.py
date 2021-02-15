@@ -155,7 +155,6 @@ class TestParser(object):
         # Only using one value in the set since set order isn't guaranteed 
         # and it makes the test flaky
         inp = 'name is anyof {"foo"}'
-        # Should use the contains operator and reverse the left and right side
         self.assert_nodes(
             inp,
             [
