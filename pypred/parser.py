@@ -43,8 +43,6 @@ tokens = (
     'LBRACK',
     'RBRACK',
     'CONTAINS',
-    'CONTAINS_ANY',
-    'CONTAINS_ALL',
     'MATCHES',
     'NUMBER',
     'STRING',
