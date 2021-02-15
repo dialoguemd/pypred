@@ -306,8 +306,8 @@ class CompareOperator(Node):
         ctx.failed.append(err)
 
 
-class ContainsOperator(Node):
-    "Used for the 'contains' operator and derived list comparisons"
+class SetComparisonOperator(Node):
+    "Used for all set comparisons"
 
     def __init__(self, op, left, right):
         self.type = op
@@ -318,7 +318,7 @@ class ContainsOperator(Node):
         return "%s operator at %s" % (self.type.upper(), self.position)
 
     def _validate(self, info):
-        if self.type not in ("contains", "any", "all"):
+        if self.type not in ("contains", "any", "all", "is_any"):
             errs = info["errors"]
             errs.append("Unknown compare operator %s" % self.type)
             return False
@@ -328,16 +328,18 @@ class ContainsOperator(Node):
         ):
             errs = info["errors"]
             errs.append(
-                "Contains operator must take a literal or constant! Got: %s for %s"
-                % (repr(self.right), self.name())
+                "%s set comparison must take a literal or constant! Got: %s for %s"
+                % (repr(self.type), repr(self.right), self.name())
             )
             return False
 
-        if self.type in ("any", "all") and not isinstance(self.right, LiteralSet):
+        if self.type in ("any", "all", "is_any") and not isinstance(
+            self.right, LiteralSet
+        ):
             errs = info["errors"]
             errs.append(
-                "Contains %s operator must take a set! Got: %s for %s"
-                % (self.type, repr(self.right), self.name())
+                "%s set comparison must take a set! Got: %s for %s"
+                % (repr(self.type), repr(self.right), self.name())
             )
             return False
 
@@ -346,12 +348,17 @@ class ContainsOperator(Node):
     @failure_info
     def eval(self, ctx):
         left = self.left.eval(ctx)
-        if not hasattr(left, "__contains__"):
+        right = self.right.eval(ctx)
+
+        if not hasattr(left, "__contains__") and self.type != "is_any":
+            return False
+        if not hasattr(right, "__contains__") and self.type == "is_any":
             return False
 
-        right = self.right.eval(ctx)
         if self.type == "contains":
             return right in left
+        if self.type == "is_any":
+            return left in right
 
         if not hasattr(right, "__iter__"):
             return False
@@ -366,15 +373,26 @@ class ContainsOperator(Node):
             left = self.left.eval(ctx)
             right = self.right.eval(ctx)
 
-        if not hasattr(left, "__contains__"):
+        if not hasattr(left, "__contains__") and self.type != "is_any":
             err = "Left side: %s does not support contains for %s" % (
                 repr(left),
+                self.name(),
+            )
+        elif not hasattr(right, "__contains__") and self.type == "is_any":
+            err = "Right side: %s does not support contains for %s" % (
+                repr(right),
                 self.name(),
             )
         elif self.type == "contains":
             err = "Right side: %s not in left side: %s for %s" % (
                 repr(right),
                 repr(left),
+                self.name(),
+            )
+        elif self.type == "is_any":
+            err = "Left side: %s not in right side: %s for %s" % (
+                repr(left),
+                repr(right),
                 self.name(),
             )
         elif not hasattr(right, "__iter__"):

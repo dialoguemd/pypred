@@ -91,9 +91,9 @@ def contains_rewrite(node, name, expr, assumed_result):
         return None
 
     # Tile to replace
-    # TODO: Arthur - Implement also for any and all, not sure I understand how it works for now, 
+    # TODO: Arthur - Implement also for any, all and is_any, not sure I understand how it works for now, 
     # will get back to it next story 
-    pattern = SimplePattern("types:ContainsOperator AND ops:contains",
+    pattern = SimplePattern("types:SetComparisonOperator AND ops:contains",
             "types:LiteralSet", ASTPattern(expr.right))
     return tile(node, [pattern], replace_func)
 

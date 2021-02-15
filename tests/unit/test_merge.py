@@ -35,9 +35,9 @@ class TestMerge(object):
         n9 = ast.MatchOperator(n1, n4)
         n9_name = merge.node_name(n9)
         assert ("MatchOperator", ("Literal", "foo"), ("Regex", "^tubez$")) == n9_name
-        n10 = ast.ContainsOperator("contains", n1, n2)
+        n10 = ast.SetComparisonOperator("contains", n1, n2)
         n10_name = merge.node_name(n10)
-        assert ("ContainsOperator", "contains", ("Literal", "foo"), ("Number", 12.0)) == n10_name
+        assert ("SetComparisonOperator", "contains", ("Literal", "foo"), ("Number", 12.0)) == n10_name
 
         # Logical operator returns literal!
         n11 = ast.LogicalOperator('and', n1, n3)
@@ -86,7 +86,7 @@ name matches '^test$' and list contains elem and foo > 20
         "Checks that a contain rewrite uses contains module"
         l = ast.LiteralSet([ast.Number(1), ast.Number(2)])
         r = ast.Literal('bar')
-        c = ast.ContainsOperator("contains", l, r)
+        c = ast.SetComparisonOperator("contains", l, r)
         name = merge.node_name(c)
         with patch('pypred.merge.contains.contains_rewrite') as cr:
             merge.rewrite_ast(c, name, c, True)
@@ -135,7 +135,7 @@ name matches '^test$' and list contains elem and foo > 20
         "Checks that a contains operation uses contains module"
         l = ast.LiteralSet([ast.Number(1), ast.Number(2)])
         r = ast.Literal('bar')
-        c = ast.ContainsOperator("contains", l, r)
+        c = ast.SetComparisonOperator("contains", l, r)
         name = merge.node_name(c)
 
         with patch('pypred.merge.contains.select_rewrite_expression') as cr:

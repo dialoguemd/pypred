@@ -99,7 +99,7 @@ def optimization_patterns():
     p12.replacement = ast.Empty()
 
     # Replace "Empty contains *" with False
-    p13 = SimplePattern("types:ContainsOperator", "types:Empty,Undefined")
+    p13 = SimplePattern("types:SetComparisonOperator", "types:Empty,Undefined")
     p13.replacement = ast.Constant(False)
 
     # Remove empty sets (python3)

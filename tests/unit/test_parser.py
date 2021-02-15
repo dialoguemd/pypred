@@ -60,8 +60,8 @@ class TestParser(object):
     "MatchOperator l:Literal r:Regex",
         "Literal v:server",
         "Regex v:east-web-([\d]+)",
-     "LogicalOperator t:and l:ContainsOperator r:CompareOperator",
-        "ContainsOperator t:contains l:Literal r:Literal",
+     "LogicalOperator t:and l:SetComparisonOperator r:CompareOperator",
+        "SetComparisonOperator t:contains l:Literal r:Literal",
             "Literal v:errors",
             "Literal v:\"CPU load\"",
         "CompareOperator t:!= l:Literal r:Literal",
@@ -132,7 +132,7 @@ class TestParser(object):
         self.assert_nodes(
             inp,
             [
-                "ContainsOperator t:any l:Literal r:LiteralSet",
+                "SetComparisonOperator t:any l:Literal r:LiteralSet",
                 "Literal v:errors",
                 'LiteralSet v:frozenset({Literal v:"foo"})',
             ],
@@ -145,7 +145,7 @@ class TestParser(object):
         self.assert_nodes(
             inp,
             [
-                "ContainsOperator t:all l:Literal r:LiteralSet",
+                "SetComparisonOperator t:all l:Literal r:LiteralSet",
                 "Literal v:errors",
                 'LiteralSet v:frozenset({Literal v:"foo"})',
             ],
@@ -159,9 +159,9 @@ class TestParser(object):
         self.assert_nodes(
             inp,
             [
-                "ContainsOperator t:contains l:LiteralSet r:Literal",
-                'LiteralSet v:frozenset({Literal v:"foo"})',
+                "SetComparisonOperator t:is_any l:Literal r:LiteralSet",
                 "Literal v:name",
+                'LiteralSet v:frozenset({Literal v:"foo"})',
             ],
         )
 

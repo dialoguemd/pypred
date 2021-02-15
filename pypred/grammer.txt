@@ -12,10 +12,10 @@ term : factor GREATER_THAN factor
        | factor NOT_EQUALS factor
        | factor IS_EQUALS NOT factor
        | factor IS_EQUALS factor
-       | factor IS_EQUALS ANY factor
        | factor CONTAINS factor
        | factor CONTAINS ANY factor
        | factor CONTAINS ALL factor
+       | factor IS_EQUALS ANY factor
        | factor MATCHES factor
        | factor
 

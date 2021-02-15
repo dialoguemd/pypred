@@ -32,7 +32,7 @@ def node_name(node):
     elif cls_name == "NegateOperator":
         return (cls_name, node_name(node.left))
 
-    elif cls_name in ("CompareOperator", "LogicalOperator", "ContainsOperator"):
+    elif cls_name in ("CompareOperator", "LogicalOperator", "SetComparisonOperator"):
         return (cls_name, node.type, node_name(node.left), node_name(node.right))
 
     elif cls_name == "MatchOperator":

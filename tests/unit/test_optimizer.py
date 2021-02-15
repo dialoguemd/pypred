@@ -223,23 +223,23 @@ class TestOptimizer(object):
         assert c == 1
         assert isinstance(r, ast.Empty)
 
-    @pytest.mark.parametrize("type", ["contains", "any", "all"])
+    @pytest.mark.parametrize("type", ["contains", "any", "all", "is_any"])
     def test_empty_contains(self, type):
         "Tests removing an Empty contains X"
         e = ast.Empty()
         v = ast.Literal('foo')
-        cn = ast.ContainsOperator(type, e, v)
+        cn = ast.SetComparisonOperator(type, e, v)
         c, r = optimizer.optimization_pass(cn)
         assert c == 1
         assert isinstance(r, ast.Constant)
         assert r.value == False
 
-    @pytest.mark.parametrize("type", ["contains", "any", "all"])
+    @pytest.mark.parametrize("type", ["contains", "any", "all", "is_any"])
     def test_undef_contains(self, type):
         "Tests removing an Empty contains X"
         u = ast.Undefined()
         v = ast.Literal('foo')
-        cn = ast.ContainsOperator(type, u, v)
+        cn = ast.SetComparisonOperator(type, u, v)
         c, r = optimizer.optimization_pass(cn)
         assert c == 1
         assert isinstance(r, ast.Constant)
