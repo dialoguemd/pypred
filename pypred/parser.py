@@ -185,6 +185,12 @@ def p_contains_all(p):
     p[0] = ast.ContainsOperator("all", p[1], p[4])
     p[0].set_position(p.lineno(2), compute_column(p.lexer, p.lexpos(2)))
 
+def p_term_is_any(p):
+    "term : factor IS_EQUALS ANY factor"
+    # We use the contains operator and reverse the left and right side
+    p[0] = ast.ContainsOperator("contains", p[4], p[1])
+    p[0].set_position(p.lineno(2), compute_column(p.lexer, p.lexpos(2)))
+
 def p_matchse(p):
     "term : factor MATCHES factor"
     p[0] = ast.MatchOperator(p[1], ast.Regex(p[3]))

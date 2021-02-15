@@ -55,13 +55,18 @@ class TestLexer(object):
         self.assert_types(inp, expected)
 
     def test_contains_any(self):
-        inp = "errors contains anyof 'BAD REQUEST'"
+        inp = "errors contains anyof errors_subset"
         expected = ['STRING', 'CONTAINS', 'ANY', 'STRING']
         self.assert_types(inp, expected)
 
     def test_contains_all(self):
-        inp = "errors contains allof 'BAD REQUEST'"
+        inp = "errors contains allof errors_subset"
         expected = ['STRING', 'CONTAINS', 'ALL', 'STRING']
+        self.assert_types(inp, expected)
+
+    def test_is_any(self):
+        inp = "'foo' is anyof errors"
+        expected = ['STRING', 'IS_EQUALS', 'ANY', 'STRING']
         self.assert_types(inp, expected)
 
     def test_matches(self):

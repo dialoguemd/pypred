@@ -151,6 +151,20 @@ class TestParser(object):
             ],
         )
 
+    def test_is_anyof_parse(self):
+        # Only using one value in the set since set order isn't guaranteed 
+        # and it makes the test flaky
+        inp = 'name is anyof {"foo"}'
+        # Should use the contains operator and reverse the left and right side
+        self.assert_nodes(
+            inp,
+            [
+                "ContainsOperator t:contains l:LiteralSet r:Literal",
+                'LiteralSet v:frozenset({Literal v:"foo"})',
+                "Literal v:name",
+            ],
+        )
+
     def test_literal_set(self):
         inp = "{true false 1.0 \"quote\"}"
         lexer = parser.get_lexer()
