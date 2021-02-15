@@ -125,6 +125,28 @@ class TestParser(object):
     "Constant v:None"
 ])
 
+    def test_contains_anyof_parse(self):
+        inp = 'errors contains anyof {"foo" "bar"}'
+        self.assert_nodes(
+            inp,
+            [
+                "ContainsOperator t:any l:Literal r:LiteralSet",
+                "Literal v:errors",
+                'LiteralSet v:frozenset({Literal v:"foo", Literal v:"bar"})',
+            ],
+        )
+
+    def test_contains_allof_parse(self):
+        inp = 'errors contains allof {"foo" "bar"}'
+        self.assert_nodes(
+            inp,
+            [
+                "ContainsOperator t:all l:Literal r:LiteralSet",
+                "Literal v:errors",
+                'LiteralSet v:frozenset({Literal v:"foo", Literal v:"bar"})',
+            ],
+        )
+
     def test_literal_set(self):
         inp = "{true false 1.0 \"quote\"}"
         lexer = parser.get_lexer()

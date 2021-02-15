@@ -103,6 +103,19 @@ class TestAST(object):
         valid, info = a.validate()
         assert valid
 
+    @pytest.mark.parametrize("type", ["any", "all"])
+    def test_contains_set_bad(self, type):
+        a = ast.ContainsOperator(type, ast.Literal("foo"), ast.Literal("bar"))
+        valid, info = a.validate()
+        assert not valid
+        assert "must take a set" in info["errors"][0]
+
+    @pytest.mark.parametrize("type", ["any", "all"])
+    def test_contains_set_valid_args(self, type):
+        a = ast.ContainsOperator(type, ast.Literal("foo"), ast.LiteralSet([ast.Literal("bar")]))
+        valid, info = a.validate()
+        assert valid
+
     def test_bad_compare(self):
         a = ast.CompareOperator("!", ast.Literal("foo"), ast.Empty())
         valid, info = a.validate()
@@ -265,16 +278,29 @@ class TestAST(object):
         assert ctx.literals["l"] == d["l"]
         assert ctx.literals["r"] == ast.Empty()
 
-    def test_contains_invalid(self):
+    @pytest.mark.parametrize("type", ["contains", "any", "all"])
+    def test_contains_invalid(self, type):
         l = ast.Literal("l")
         r = ast.Literal("r")
-        a = ast.ContainsOperator("contains", l, r)
-        d = {"l": 1, "r": None}
+        a = ast.ContainsOperator(type, l, r)
+        d = {"l": 1, "r": 1}
         res, ctx = a.analyze(MockPred(), d)
         assert not res
         assert "does not support contains" in ctx.failed[0]
         assert ctx.literals["l"] == 1
-        assert ctx.literals["r"] == None
+        assert ctx.literals["r"] == 1
+
+    @pytest.mark.parametrize("type", ["any", "all"])
+    def test_contains_set_invalid(self, type):
+        l = ast.Literal("l")
+        r = ast.Literal("r")
+        a = ast.ContainsOperator(type, l, r)
+        d = {"l": [1,2], "r": 2}
+        res, ctx = a.analyze(MockPred(), d)
+        assert not res
+        assert "is not iterable" in ctx.failed[0]
+        assert ctx.literals["l"] == [1,2]
+        assert ctx.literals["r"] == 2
 
     def test_contains_undef(self):
         l = ast.Literal("l")
@@ -287,6 +313,28 @@ class TestAST(object):
         assert ctx.literals["l"] == ast.Undefined()
         assert ctx.literals["r"] == 5
 
+    def test_contains_any_undef(self):
+        l = ast.Literal("l")
+        r = ast.Literal("r")
+        a = ast.ContainsOperator("any", l, r)
+        d = {"r": [5]}
+        res, ctx = a.analyze(MockPred(), d)
+        assert not res
+        assert "none of [5] items in left side" in ctx.failed[0]
+        assert ctx.literals["l"] == ast.Undefined()
+        assert ctx.literals["r"] == [5]
+
+    def test_contains_all_undef(self):
+        l = ast.Literal("l")
+        r = ast.Literal("r")
+        a = ast.ContainsOperator("all", l, r)
+        d = {"r": [5]}
+        res, ctx = a.analyze(MockPred(), d)
+        assert not res
+        assert "not in left side" in ctx.failed[0]
+        assert ctx.literals["l"] == ast.Undefined()
+        assert ctx.literals["r"] == [5]
+
     def test_contains_empty(self):
         l = ast.Literal("l")
         r = ast.Literal("r")
@@ -298,6 +346,28 @@ class TestAST(object):
         assert ctx.literals["l"] == []
         assert ctx.literals["r"] == 5
 
+    def test_contains_any_empty(self):
+        l = ast.Literal("l")
+        r = ast.Literal("r")
+        a = ast.ContainsOperator("any", l, r)
+        d = {"l": [], "r": [5]}
+        res, ctx = a.analyze(MockPred(), d)
+        assert not res
+        assert "none of [5] items in left side" in ctx.failed[0]
+        assert ctx.literals["l"] == []
+        assert ctx.literals["r"] == [5]
+
+    def test_contains_all_empty(self):
+        l = ast.Literal("l")
+        r = ast.Literal("r")
+        a = ast.ContainsOperator("all", l, r)
+        d = {"l": [], "r": [5]}
+        res, ctx = a.analyze(MockPred(), d)
+        assert not res
+        assert "not in left side" in ctx.failed[0]
+        assert ctx.literals["l"] == []
+        assert ctx.literals["r"] == [5]
+
     def test_contains_valid(self):
         l = ast.Literal("l")
         r = ast.Literal("r")
@@ -307,6 +377,26 @@ class TestAST(object):
         assert res
         assert ctx.literals["l"] == [42]
         assert ctx.literals["r"] == 42
+
+    def test_contains_any_valid(self):
+        l = ast.Literal("l")
+        r = ast.Literal("r")
+        a = ast.ContainsOperator("any", l, r)
+        d = {"l": [42], "r": [10, 20, 30, 42]}
+        res, ctx = a.analyze(MockPred(), d)
+        assert res
+        assert ctx.literals["l"] == [42]
+        assert ctx.literals["r"] == [10, 20, 30, 42]
+
+    def test_contains_all_valid(self):
+        l = ast.Literal("l")
+        r = ast.Literal("r")
+        a = ast.ContainsOperator("all", l, r)
+        d = {"l": [40, 41, 42], "r": [41, 42]}
+        res, ctx = a.analyze(MockPred(), d)
+        assert res
+        assert ctx.literals["l"] == [40, 41, 42]
+        assert ctx.literals["r"] == [41, 42]
 
     def test_match_bad_types(self):
         l = ast.Literal("l")
