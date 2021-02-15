@@ -27,5 +27,6 @@ thingy is 200 and val is 100 # false
 {"east-db-001" "east-foo-002"} contains server # false
 errors contains anyof {'cpu load' 'foo'} # true
 errors contains anyof {'foo' 'bar'} # false
+not errors contains anyof {'foo' 'bar'} # true
 errors contains allof {'cpu load' 'disk full'} # true
 errors contains allof {'cpu load' 'disk full' 'foo'} # false
