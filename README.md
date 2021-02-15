@@ -32,7 +32,7 @@ It supports the following:
 * Logical operators `not`, `and`, `or`
 * Comparison operators >, >=, <, <=, =, !=, 'is', 'is not'
 * Parenthesis to disambiguate
-* The subset check operator `contains`
+* Subset check operators `contains`, `contains anyof`, `contains allof`
 * The regular expression matcher `matches`
 * String literals, quoted if they include spaces
 * Numeric literals
@@ -85,6 +85,16 @@ Literal sets can be used to check for multiple clauses:
 
 This provides two literal sets which are used to check against the dynamic values
 of error\_level and status\_code.
+
+They can also be used to check that a collection is a subset of another:
+
+    errors contains allof {"cpu load" "disk full"} 
+
+This checks that both "cpu load" and "disk full" are reported as errors
+
+    errors contains anyof {"cpu load" "foo"} 
+
+This checks that at least one of "cpu load" and "foo" is reported as an error
 
 API
 ===
