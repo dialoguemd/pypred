@@ -32,7 +32,7 @@ It supports the following:
 * Logical operators `not`, `and`, `or`
 * Comparison operators >, >=, <, <=, =, !=, 'is', 'is not'
 * Parenthesis to disambiguate
-* Subset check operators `contains`, `contains anyof`, `contains allof`
+* Subset check operators `contains`, `contains anyof`, `contains allof`, `is anyof`
 * The regular expression matcher `matches`
 * String literals, quoted if they include spaces
 * Numeric literals
@@ -82,6 +82,9 @@ Notice that in previous example we used slashes instead of quotation marks. This
 Literal sets can be used to check for multiple clauses:
 
     {"WARN" "ERR" "CRIT"} contains error_level or {500 501 503} contains status_code
+    
+    # Alternative syntax
+    error_level is anyof {"WARN" "ERR" "CRIT"} or status_code is anyof {500 501 503}
 
 This provides two literal sets which are used to check against the dynamic values
 of error\_level and status\_code.
