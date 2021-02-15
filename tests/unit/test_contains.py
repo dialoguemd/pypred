@@ -8,9 +8,9 @@ class TestContains(object):
         s2 = ast.LiteralSet([ast.Number(1)])
         s3 = ast.LiteralSet([ast.Number(1), ast.Number(2), ast.Number(3), ast.Number(4), ast.Number(5)])
         l = ast.Literal('foo')
-        c1 = ast.ContainsOperator("contains", s1, l)
-        c2 = ast.ContainsOperator("contains", s2, l)
-        c3 = ast.ContainsOperator("contains", s3, l)
+        c1 = ast.SetComparisonOperator("contains", s1, l)
+        c2 = ast.SetComparisonOperator("contains", s2, l)
+        c3 = ast.SetComparisonOperator("contains", s3, l)
 
         name = merge.node_name(c1, True)
         select = contains.select_rewrite_expression(settings, name, [c1, c2, c3])
@@ -24,8 +24,8 @@ class TestContains(object):
         nums = [ast.Number(x) for x in range(100, 200)]
         s2 = ast.LiteralSet(nums)
         l = ast.Literal('foo')
-        c1 = ast.ContainsOperator("contains", s1, l)
-        c2 = ast.ContainsOperator("contains", s2, l)
+        c1 = ast.SetComparisonOperator("contains", s1, l)
+        c2 = ast.SetComparisonOperator("contains", s2, l)
 
         name = merge.node_name(c1, True)
         select = contains.select_rewrite_expression(settings, name, [c1, c2])
@@ -40,11 +40,11 @@ class TestContains(object):
         s4 = ast.LiteralSet([ast.Number(6)])
         s5 = ast.LiteralSet([ast.Number(2), ast.Number(3), ast.Number(4)])
         l = ast.Literal('foo')
-        c1 = ast.ContainsOperator("contains", s1, l)
-        c2 = ast.ContainsOperator("contains", s2, l)
-        c3 = ast.ContainsOperator("contains", s3, l)
-        c4 = ast.ContainsOperator("contains", s4, l)
-        c5 = ast.ContainsOperator("contains", s5, l)
+        c1 = ast.SetComparisonOperator("contains", s1, l)
+        c2 = ast.SetComparisonOperator("contains", s2, l)
+        c3 = ast.SetComparisonOperator("contains", s3, l)
+        c4 = ast.SetComparisonOperator("contains", s4, l)
+        c5 = ast.SetComparisonOperator("contains", s5, l)
 
         # Rewrite set1 as True, s3 is super set, should be True
         name = merge.node_name(c1, True)
@@ -79,7 +79,7 @@ class TestContains(object):
         # the negation of s1 - s5
         r = contains.contains_rewrite(c5, name, c1, True)
         assert isinstance(r, ast.NegateOperator)
-        assert isinstance(r.left, ast.ContainsOperator)
+        assert isinstance(r.left, ast.SetComparisonOperator)
         assert len(r.left.left.value)
         assert ast.Number(1) in r.left.left.value
 

@@ -23,8 +23,11 @@ val > val2 or val < val2 # true
 nested contains 'tweet' # true
 thingy is 200 and val is 100 # false
 {"Jack" "Joe" "Jill"} contains name # true
+name is anyof {"Jack" "Joe" "Jill"} # true
 {400 500} contains status # true
+status is anyof {400 500} # true
 {"east-db-001" "east-foo-002"} contains server # false
+server is anyof {"east-db-001" "east-foo-002"} # false
 errors contains anyof {'cpu load' 'foo'} # true
 errors contains anyof {'foo' 'bar'} # false
 not errors contains anyof {'foo' 'bar'} # true

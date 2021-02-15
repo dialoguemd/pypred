@@ -243,7 +243,7 @@ def select_rewrite_expression(settings, name, exprs):
 
     # Check if this is a contains operator. The contains operator
     # uses static rewriting if we are operating on LiteralSets
-    elif name[0] == "ContainsOperator" and name[1] == "contains" and name[2] == 'LiteralSet':
+    elif name[0] == "SetComparisonOperator" and name[1] == "contains" and name[2] == 'LiteralSet':
         return contains.select_rewrite_expression(settings, name, exprs)
 
     # For negate operators, use the sub-expression
@@ -269,7 +269,7 @@ def rewrite_ast(node, name, expr, assumed_result):
     if name[0] == "CompareOperator":
         return compare.compare_rewrite(node, name, expr, assumed_result)
 
-    elif name[0] == "ContainsOperator" and name[1] == "contains" and name[2] == 'LiteralSet':
+    elif name[0] == "SetComparisonOperator" and name[1] == "contains" and name[2] == 'LiteralSet':
         return contains.contains_rewrite(node, name, expr, assumed_result)
 
     else:
@@ -359,7 +359,7 @@ def node_name(node, enable_static=False):
         else:
             return node_name(node.right)
 
-    elif cls_name == "ContainsOperator":
+    elif cls_name == "SetComparisonOperator":
         return (cls_name, node.type, node_name(node.left), node_name(node.right))
 
     elif cls_name == "MatchOperator":
@@ -385,8 +385,8 @@ def count_patterns():
     # Handle regex matches
     p3 = SimplePattern("types:MatchOperator", simple_types)
 
-    # Handle simple contains
-    p4 = SimplePattern("types:ContainsOperator", simple_types, simple_types)
+    # Handle simple set comparison
+    p4 = SimplePattern("types:SetComparisonOperator", simple_types, simple_types)
 
     # Handle simple logical expressions
     p5 = SimplePattern("types:LogicalOperator", "types:Literal", None)

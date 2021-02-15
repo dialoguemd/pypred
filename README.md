@@ -32,7 +32,7 @@ It supports the following:
 * Logical operators `not`, `and`, `or`
 * Comparison operators >, >=, <, <=, =, !=, 'is', 'is not'
 * Parenthesis to disambiguate
-* Subset check operators `contains`, `contains anyof`, `contains allof`
+* Set comparison operators `contains`, `contains anyof`, `contains allof`, `is anyof`
 * The regular expression matcher `matches`
 * String literals, quoted if they include spaces
 * Numeric literals
@@ -82,6 +82,9 @@ Notice that in previous example we used slashes instead of quotation marks. This
 Literal sets can be used to check for multiple clauses:
 
     {"WARN" "ERR" "CRIT"} contains error_level or {500 501 503} contains status_code
+    
+    # Alternative syntax
+    error_level is anyof {"WARN" "ERR" "CRIT"} or status_code is anyof {500 501 503}
 
 This provides two literal sets which are used to check against the dynamic values
 of error\_level and status\_code.
@@ -170,7 +173,7 @@ Here is an example of a human readable description of:
             Literal server at line: 1, col 0
             Regex 'east-web-([\\d]+)' at line: 1, col 15
         AND operator at line: 1, col 65
-            ContainsOperator at line: 1, col 45
+            SetComparisonOperator at line: 1, col 45
                 Literal errors at line: 1, col 38
                 Literal "CPU load" at line: 1, col 54
             != comparison at line: 1, col 81
@@ -184,7 +187,7 @@ Here is an example of the output during a failed evaluation:
     assert res == False
 
     pprint.pprint(ctx.failed)
-     ["Right side: 'CPU load' not in left side: [] for ContainsOperator at line: 1, col 45",
+     ["Right side: 'CPU load' not in left side: [] for SetComparisonOperator at line: 1, col 45",
                  'Left hand side of AND operator at line: 1, col 65 failed',
                  'Right hand side of AND operator at line: 1, col 34 failed']
 

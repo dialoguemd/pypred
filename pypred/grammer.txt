@@ -15,6 +15,7 @@ term : factor GREATER_THAN factor
        | factor CONTAINS factor
        | factor CONTAINS ANY factor
        | factor CONTAINS ALL factor
+       | factor IS_EQUALS ANY factor
        | factor MATCHES factor
        | factor
 
