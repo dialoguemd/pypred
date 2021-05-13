@@ -438,7 +438,7 @@ class MatchOperator(Node):
             return False
 
         right = self.right.eval(ctx)
-        match = right.search(left)
+        match = right.fullmatch(left)
         return match is not None
 
     def failure_info(self, ctx):
