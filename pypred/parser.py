@@ -5,7 +5,7 @@ to parse the grammars
 ###
 # Implements the lexer
 ###
-from pypred.ply import lex
+import pypred.ply.lex as lex
 
 reserved = {
     'is': 'IS_EQUALS',
@@ -124,7 +124,7 @@ def get_lexer():
 ###
 # Implements the parser
 ###
-from pypred.ply import yacc
+import pypred.ply.yacc as yacc
 from . import ast
 
 precedence = (
