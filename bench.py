@@ -4,8 +4,6 @@ import random
 import pickle
 from pypred import Predicate, PredicateSet, OptimizedPredicateSet
 
-if sys.version < '3':
-    range = xrange
 
 def get_words():
     "Returns a large list of words"

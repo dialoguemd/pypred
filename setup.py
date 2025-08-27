@@ -19,7 +19,7 @@ setup(name='pypred',
       url="https://github.com/armon/pypred/",
       license="MIT License",
       keywords=["python", "predicate", "natural language"],
-      packages=['pypred'],
+      packages=['pypred', 'pypred.ply'],
       classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
