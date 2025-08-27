@@ -2,10 +2,10 @@
 This module helps to perform AST
 re-writing to do simple optimizations.
 """
+from collections.abc import Callable
 from functools import partial
 from .tiler import tile, Pattern, SimplePattern
 from . import ast
-import collections
 
 CACHE_PATTERNS = None
 
@@ -44,7 +44,7 @@ def optimization_pass(node):
 def optimization_func(info, pattern, node):
     "Invoked to count an applied optimization and to replace"
     info['c'] += 1
-    if isinstance(pattern.replacement, collections.Callable):
+    if isinstance(pattern.replacement, Callable):
         return pattern.replacement(node)
     else:
         return pattern.replacement

@@ -13,3 +13,5 @@ parser.out
 
 dist/
 *.egg-info/
+.vscode/
+!.vscode/launch.json
