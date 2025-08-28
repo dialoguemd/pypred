@@ -1,7 +1,2 @@
-ply==3.8
-pytest==2.9.2
-mock==2.0.0
-coverage==4.2
-pbr==1.10.0
-py==1.4.31
-six==1.10.0
+pytest==8.4.1
+coverage==7.10.5

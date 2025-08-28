@@ -1,12 +1,8 @@
 from .parser import get_lexer, get_parser
 from . import ast
-import collections
+from collections.abc import Callable
 
-# python2/3 basestring compatibility
-try:
-    unicode = unicode
-except NameError: # python3
-    basestring = (str, bytes)
+basestring = (str, bytes)
 
 class InvalidPredicate(Exception):
     "Raised for evaluation of an invalid predicate"
@@ -71,7 +67,7 @@ class LiteralResolver(object):
         # Check if there is a resolver
         if identifier in self.resolvers:
             relv = self.resolvers[identifier]
-            if isinstance(relv, collections.Callable):
+            if isinstance(relv, Callable):
                 return relv()
             else:
                 return relv

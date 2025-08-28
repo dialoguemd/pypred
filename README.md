@@ -21,6 +21,11 @@ of predicates to prune the predicates that will not match most efficiently.
 The parameters of the optimization can be tweaked to find a speed/memory
 balance.
 
+Python version
+=======
+
+Compatible with 3.6+.
+
 Grammar
 =======
 
